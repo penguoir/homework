@@ -1,7 +1,6 @@
 import { request, gql, GraphQLClient } from "graphql-request";
 
-const AUTH_CODE =
-  "3088~MSfd0s6Yns1yyhSCcTbcRFbJhNwhWs2MPQwjQComCxmhz3mqegoEjDPdIlETLXdc";
+const AUTH_CODE = process.env.AUTH_CODE; 
 const ENDPOINT = "https://kingalfred.instructure.com/api/graphql";
 
 const client = new GraphQLClient(ENDPOINT, {
