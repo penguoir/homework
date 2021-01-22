@@ -13,6 +13,10 @@ const IndexPage = () => {
     return "";
   }
 
+  if (error) {
+    return JSON.stringify(error);
+  }
+
   let assignments = [];
   data.allCourses.forEach((course) => {
     course.assignmentsConnection.nodes.forEach((assignment) => {
