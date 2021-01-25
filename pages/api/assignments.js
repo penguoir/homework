@@ -20,6 +20,14 @@ const query = gql`
           name
           dueAt
           htmlUrl
+
+          submissionsConnection {
+            nodes {
+              attempt
+              createdAt
+              id
+            }
+          }
         }
       }
     }

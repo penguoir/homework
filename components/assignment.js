@@ -13,19 +13,34 @@ const formatCourseName = (name) => {
   return name;
 };
 
-const Assignment = ({ id, htmlUrl, name, dueAt, course }) => {
+const Assignment = ({
+  id,
+  htmlUrl,
+  name,
+  dueAt,
+  submissionsConnection,
+  course,
+}) => {
   return (
-    <li
-      key={id}
-      className="grid grid-cols-12 mb-4"
-    >
+    <li key={id} className="grid grid-cols-12 mb-4">
       <div className="col-span-8">
-        <a href={htmlUrl} className="text-gray-900 hover:underline" title={`Go to Canvas assignment for ${name}`}>
+        <a
+          href={htmlUrl}
+          className="text-gray-900 hover:underline"
+          title={`Go to Canvas assignment for ${name}`}
+        >
           {name}
         </a>
+
+        {submissionsConnection.nodes.length > 0 && (
+          <div className="text-green-500">
+            Submitted{" "}
+            {dayjs(submissionsConnection.nodes[0].createdAt).fromNow()}
+          </div>
+        )}
       </div>
       <div className="col-span-4 text-right text-gray-400">
-        {dayjs(dueAt).calendar()}
+        due {dayjs(dueAt).calendar()}
         <br />
         {formatCourseName(course.name)}
       </div>

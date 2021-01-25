@@ -52,13 +52,13 @@ const IndexPage = () => {
       <main className="w-full">
         <div className="max-w-4xl mx-auto px-4 my-16">
           <h2 className="mt-8 mb-5 border-b pb-3 font-bold text-lg">Upcoming assignments</h2>
-          <ul className="">
-            {futureAssignments.map(Assignment)}
+          <ul>
+            {futureAssignments.map(x => <Assignment {...x} />)}
           </ul>
 
           <h2 className="mt-16 mb-5 border-b pb-3 font-bold text-lg">Past assignments</h2>
           <ul className="">
-            {pastAssignments.map(Assignment)}
+            {pastAssignments.map(x => <Assignment {...x} />)}
           </ul>
         </div>
       </main>
