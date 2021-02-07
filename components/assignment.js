@@ -20,6 +20,7 @@ const Assignment = ({
   dueAt,
   submissionsConnection,
   course,
+  expectsSubmission,
 }) => {
   return (
     <li key={id} className="grid grid-cols-12 mb-4">
@@ -31,6 +32,12 @@ const Assignment = ({
         >
           {name}
         </a>
+
+{!expectsSubmission && (
+  <div className="text-green-500">
+    Does not expect submission.
+  </div>
+)}
 
         {submissionsConnection.nodes.length > 0 && (
           <div className="text-green-500">
