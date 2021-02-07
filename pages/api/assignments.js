@@ -20,6 +20,7 @@ const query = gql`
           name
           dueAt
           htmlUrl
+          expectsSubmission
 
           submissionsConnection {
             nodes {
