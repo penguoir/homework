@@ -19,30 +19,30 @@ const formatCourseName = (name) => {
     "Physics with Peter and Laura": "Physics",
     "Further Maths with Pany": "Pany",
     "Maths with Jeff": "Stats and Mechanics",
-    "Further Maths with Jeff": "Further Mechanics"
-  }
+    "Further Maths with Jeff": "Further Mechanics",
+  };
 
   return map[name] || name;
 };
 
-const date = new Date()
+const date = new Date();
 const color = (due) => {
-  const days = (date - dayjs(due)) / 1000 / 60 / 60 / 24
+  const days = (date - dayjs(due)) / 1000 / 60 / 60 / 24;
 
   if (days < -7) {
-    return "green-100"
+    return "green-100";
   }
 
   if (days < -5) {
-    return "yellow-100"
+    return "yellow-100";
   }
 
   if (days < 0) {
-    return "red-100"
+    return "red-100";
   }
 
-  return "gray-100"
-}
+  return "gray-100";
+};
 
 const Assignment = ({
   id,
@@ -54,14 +54,35 @@ const Assignment = ({
   course,
   expectsSubmission,
 }) => {
-
   const toggleDoing = () => {
-    firestore.collection('metadata').doc(id).set({ wont_do: !wont_do })
-    wont_do = !wont_do
+    firestore.collection("metadata").doc(id).set({ wont_do: !wont_do });
+    wont_do = !wont_do;
+  };
+
+  const done =
+    wont_do || !expectsSubmission || submissionsConnection.nodes.length > 0;
+  if (done) {
+    return (
+      <li className="mb-4 text-gray-500 text-xs">
+        <a href={htmlUrl}>{name}</a>
+
+        {wont_do && (
+          <>
+            {" "}
+            - marked as "won't do"
+            <a onClick={toggleDoing} className="ml-2 cursor-pointer underline">
+              unmark as "wont do"
+            </a>
+          </>
+        )}
+        {!expectsSubmission && " - no submission expected"}
+        {submissionsConnection.nodes.length > 0 && " - submitted"}
+      </li>
+    );
   }
 
   return (
-    <li key={id} className="grid grid-cols-12 mb-4">
+    <li className="grid grid-cols-12 mb-4 shadow rounded p-4">
       <div className="col-span-8">
         <div className="flex flex-wrap items-baseline">
           <a
@@ -72,16 +93,17 @@ const Assignment = ({
             {name}
           </a>
 
-          <a onClick={toggleDoing} className="text-gray-200 duration-300 transition-color hover:text-indigo-600 text-sm cursor-pointer">
-            { wont_do ? "Unmark" : "Mark as won't do" }
+          <a
+            onClick={toggleDoing}
+            className="text-gray-200 duration-300 transition-color hover:text-indigo-600 text-sm cursor-pointer"
+          >
+            Mark as won't do
           </a>
         </div>
 
-{!expectsSubmission && (
-  <div className="text-green-500">
-    Does not expect submission.
-  </div>
-)}
+        {!expectsSubmission && (
+          <div className="text-green-500">Does not expect submission.</div>
+        )}
 
         {submissionsConnection.nodes.length > 0 && (
           <div className="text-green-500">
@@ -89,15 +111,11 @@ const Assignment = ({
             {dayjs(submissionsConnection.nodes[0].createdAt).fromNow()}
           </div>
         )}
-
-        {wont_do && (
-          <div className="text-green-500">
-            Won't do
-          </div>
-        )}
       </div>
       <div className="col-span-4 text-right text-gray-400">
-        <span className={"bg-" + color(dueAt)}>due {dayjs(dueAt).calendar()}</span>
+        <span className={"bg-" + color(dueAt)}>
+          due {dayjs(dueAt).calendar()}
+        </span>
         <br />
         {formatCourseName(course.name)}
       </div>
