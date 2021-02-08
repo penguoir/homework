@@ -1,15 +1,15 @@
 import { request, gql, GraphQLClient } from "graphql-request";
 
-const AUTH_CODE = process.env.AUTH_CODE; 
-const ENDPOINT = "https://kingalfred.instructure.com/api/graphql";
+const CANVAS_AUTH_CODE = process.env.CANVAS_AUTH_CODE; 
+const CANVAS_ENDPOINT = "https://kingalfred.instructure.com/api/graphql";
 
-const client = new GraphQLClient(ENDPOINT, {
+const canvas_client = new GraphQLClient(CANVAS_ENDPOINT, {
   headers: {
-    Authorization: `Bearer ${AUTH_CODE}`,
+    Authorization: `Bearer ${CANVAS_AUTH_CODE}`,
   },
 });
 
-const query = gql`
+const canvas_query = gql`
   {
     allCourses {
       id
@@ -35,7 +35,9 @@ const query = gql`
   }
 `;
 
+const FAUNA_SECRET = process.env.FAUNA_SECRET
+
 module.exports = async (req, res) => {
-  const data = await client.request(query);
+  const data = await canvas_client.request(canvas_query);
   res.send(data);
 };

@@ -1,8 +1,10 @@
+import React from 'react'
 import useSWR from "swr";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import calendar from "dayjs/plugin/calendar";
 import Assignment from '../components/assignment'
+import { firestore } from '../lib/firebase'
 
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
@@ -11,8 +13,22 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const IndexPage = () => {
   const { data, error } = useSWR("/api/assignments", fetcher);
+  const [metadata, setMetadata] = React.useState({})
 
-  if (!data) {
+  React.useEffect(() => {
+    return firestore.collection('metadata')
+      .onSnapshot(snapshot => {
+        let temp = {}
+
+        snapshot.docs.forEach(doc => {
+          temp[doc.id] = doc.data()
+        })
+
+        setMetadata(temp)
+      })
+  }, [data])
+
+  if (!data || !metadata) {
     return "";
   }
 
@@ -25,6 +41,7 @@ const IndexPage = () => {
     course.assignmentsConnection.nodes.forEach((assignment) => {
       assignments.push({
         ...assignment,
+        ...metadata[assignment.id],
         course,
       });
     });
